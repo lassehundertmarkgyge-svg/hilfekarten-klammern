@@ -1,0 +1,132 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Hilfekarten Minus vor der Klammer</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=Bungee&display=swap">
+<style>
+/* Layout: eine schmale Spalte, drei Schritte, je Schritt gestapelte Hilfen, die sich nacheinander freischalten */
+:root{
+  --bg:#f3ece0; --card:#fffaf1; --ink:#2b2016; --soft:#6b5a45; --kraft:#dcc196; --kraft2:#c9a774;
+  --night:#1a1f25; --hazard:#f2c230; --blue:#2f6fa8; --red:#c4422e; --line:#e2d4bb; --lock:#ece3d3;
+  --display:'Bungee','Arial Black',sans-serif; --body:'Atkinson Hyperlegible',Verdana,sans-serif;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#171b20; --card:#222830; --ink:#ece6db; --soft:#a9b2bc; --kraft:#6e5a3c; --kraft2:#8a7048;
+  --night:#0f1216; --hazard:#f2c230; --blue:#7fb2e5; --red:#ec7a64; --line:#343c47; --lock:#1d2229; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#171b20; --card:#222830; --ink:#ece6db; --soft:#a9b2bc; --kraft:#6e5a3c; --kraft2:#8a7048;
+  --night:#0f1216; --hazard:#f2c230; --blue:#7fb2e5; --red:#ec7a64; --line:#343c47; --lock:#1d2229; color-scheme:dark}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--ink);font-family:var(--body);font-size:18px;line-height:1.5;margin:0}
+.top{background:var(--night);color:#ece6db}
+.stripe{height:10px;background:repeating-linear-gradient(-45deg,var(--hazard) 0 12px,#111 12px 24px)}
+.wrap{max-width:720px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+.top .wrap{padding-block:22px 26px}
+.eyebrow{font-size:13px;letter-spacing:.18em;text-transform:uppercase;color:#a3acb6;font-weight:700}
+h1{font-family:var(--display);font-weight:400;font-size:clamp(28px,6vw,40px);line-height:1.1;margin:6px 0 10px;color:var(--hazard);text-wrap:balance}
+.top p{margin:0;max-width:60ch;color:#d9d2c6}
+main .wrap{padding-block:24px 48px;display:flex;flex-direction:column;gap:32px}
+section{display:flex;flex-direction:column;gap:12px}
+h2{margin:0;font-size:22px;display:flex;align-items:baseline;gap:10px;flex-wrap:wrap}
+h2 .n{font-family:var(--display);font-weight:400;font-size:15px;background:var(--kraft);color:var(--ink);padding:3px 10px;border-radius:4px}
+h2 .sub{font-weight:400;font-size:16px;color:var(--soft)}
+.hint{background:var(--card);border:2px solid var(--line);border-radius:10px;overflow:hidden}
+.hint>button{all:unset;box-sizing:border-box;width:100%;cursor:pointer;display:flex;align-items:center;gap:14px;padding:14px 16px;min-height:60px;font-weight:700;font-size:18px}
+.hint>button:focus-visible{outline:3px solid var(--blue);outline-offset:-3px}
+.badge{flex:none;width:38px;height:38px;border-radius:50%;display:grid;place-items:center;border:2px solid var(--ink);font-size:18px}
+.hint.open .badge{background:var(--hazard);color:#2b2016;border-color:#2b2016}
+.chev{margin-left:auto;transition:transform .2s}
+.hint.open .chev{transform:rotate(180deg)}
+.hint.locked{background:var(--lock);border-style:dashed}
+.hint.locked>button{cursor:not-allowed;color:var(--soft);font-weight:400}
+.hint.locked .badge{border-color:var(--soft)}
+.body{padding:4px 18px 18px 68px;display:flex;flex-direction:column;gap:8px}
+.body p{margin:0;max-width:60ch}
+.math{font-size:20px;background:var(--bg);border-radius:6px;padding:6px 12px;font-variant-numeric:tabular-nums;white-space:pre;overflow-x:auto;max-width:100%}
+.vz{border-collapse:collapse;font-size:20px;text-align:center}.vz th,.vz td{border:2px solid var(--line);padding:4px 16px}.vz th{font-size:15px;color:var(--soft)}
+.math b{color:var(--red)}
+.foot{display:flex;flex-wrap:wrap;gap:12px;align-items:center;justify-content:space-between;border-top:2px solid var(--line);padding-top:18px;color:var(--soft);font-size:16px}
+.foot button{font:inherit;font-weight:700;color:var(--ink);background:var(--card);border:2px solid var(--line);border-radius:8px;padding:10px 16px;cursor:pointer;min-height:44px}
+.foot button:focus-visible{outline:3px solid var(--blue)}
+.confirm{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+@media (max-width:480px){.body{padding-left:18px}.math{font-size:16px;padding:6px 8px}}
+@media (prefers-reduced-motion:reduce){.chev{transition:none}}
+</style>
+
+</head>
+<body>
+<header class="top"><div class="stripe"></div><div class="wrap">
+  <div class="eyebrow">Lernpfad · Minus vor der Klammer</div>
+  <h1>Hilfekarten</h1>
+  <p>Öffne immer zuerst Hilfe 1. Hilft sie dir nicht weiter, wird danach die nächste Hilfe frei. Kreise auf deinem Lernpfad ein, welche Hilfen du benutzt hast.</p>
+</div></header>
+
+<main><div class="wrap" id="app"></div></main>
+
+<script>
+const IMG = {};
+const VZ = `<table class="vz"><tr><th>Faktor</th><th>Glied</th><th>Produkt</th></tr><tr><td>−</td><td>+</td><td>−</td></tr><tr><td>−</td><td>−</td><td>+</td></tr></table>`;
+const STEPS = [
+  { id: 's1', title: 'Welche Terme sind gleichwertig?', sub: 'Einsetzen und vergleichen', hints: [
+    ['So prüfst du Termgleichheit.', `<p>Setze x = 1 in den Ausgangsterm ein:</p><div class="math">10 − (1 + 4) = 10 − 5 = 5</div><p>Setze dann x = 1 in jeden Vorschlag ein, zum Beispiel:</p><div class="math">10 − 1 + 4 = 13</div><p>Nur Terme, die für <strong>beide</strong> Werte dasselbe Ergebnis liefern wie der Ausgangsterm, kommen infrage.</p>`],
+    ['Denke an Geld.', `<p>Du hast 10 €. Du gibst x € und 4 € aus. Insgesamt gibst du (x + 4) € aus:</p><div class="math">10 − (x + 4) = 10 − x − 4</div><p>Beide Beträge werden subtrahiert.</p><p>Bei 10 − (x − 4) subtrahierst du einen Betrag, der um 4 kleiner ist als x. Du hast also 4 € mehr übrig als bei 10 − x.</p>`],
+    ['Das Distributivgesetz.', `<p>Das Minuszeichen vor der Klammer ist der Faktor (−1):</p><div class="math">−(x + 4) = (−1) · x + (−1) · 4 = −x − 4</div><div class="math">−(x − 4) = (−1) · x + (−1) · (−4) = −x + 4</div><p>Beschreibe jetzt, was mit den Vorzeichen in der Klammer passiert.</p>`],
+  ]},
+  { id: 's2', title: 'Die Regel', sub: 'Merksatz und Begründung', hints: [
+    ['Vorzeichenregeln.', `<p>Wird ein Glied mit einem negativen Faktor multipliziert, kehrt sich sein Vorzeichen um:</p>${VZ}<div class="math">(−1) · (−b) = +b</div>`],
+    ['Fertiges Beispiel.', `<div class="math">−2 · (4x − 3) = (−2) · 4x + (−2) · (−3) = −8x + 6</div><p>Für Aufgabe b) gehst du genauso vor, nur mit dem Faktor (−1) und den Gliedern a und −b.</p>`],
+  ]},
+  { id: 's3', title: 'Üben', sub: 'Basis, Standard, Experte', hints: [
+    ['Das Minus gehört zum Faktor.', `<p>Bei 5x − 2 · (x − 3) multiplizierst du die Klammer mit <strong>(−2)</strong>:</p><div class="math">5x − 2 · (x − 3) = 5x + (−2) · x + (−2) · (−3)</div><div class="math">= 5x − 2x + 6 = 3x + 6</div><p>Fasse gleichartige Glieder erst am Ende zusammen.</p>`],
+    ['Gleichungen mit Klammern.', `<p>Löse zuerst die Klammer auf, fasse zusammen und forme dann äquivalent um:</p><div class="math">7 − (x + 2) = 1</div><div class="math">7 − x − 2 = 1</div><div class="math">5 − x = 1   | − 5</div><div class="math">−x = −4   | · (−1)</div><div class="math">x = 4</div><p>Mache am Ende die Probe.</p>`],
+    ['Verschachtelte Klammern.', `<p>Löse die Klammern von innen nach außen auf:</p><div class="math">2 − [x − (1 − x)]</div><div class="math">= 2 − [x − 1 + x]</div><div class="math">= 2 − [2x − 1]</div><div class="math">= 2 − 2x + 1 = 3 − 2x</div>`],
+  ]},
+];
+const KEY = 'hilfen-minus-v1';
+let open = {};
+try { open = JSON.parse(localStorage.getItem(KEY) || '{}') || {}; } catch (e) { open = {}; }
+const save = () => { try { localStorage.setItem(KEY, JSON.stringify(open)); } catch (e) {} };
+let shown = {}; // aktuell aufgeklappt
+let asking = false;
+
+function render() {
+  const app = document.getElementById('app');
+  let html = '';
+  for (const s of STEPS) {
+    html += `<section aria-labelledby="h-${s.id}"><h2 id="h-${s.id}"><span class="n">Schritt ${s.id.slice(1)}</span>${s.title}<span class="sub">${s.sub}</span></h2>`;
+    s.hints.forEach(([title, body], i) => {
+      const k = s.id + '-' + i;
+      const unlocked = i === 0 || open[s.id + '-' + (i - 1)];
+      const isOpen = !!shown[k];
+      const label = unlocked ? `Hilfe ${i + 1}${open[k] ? ' · ' + title : ''}` : `Hilfe ${i + 1} · erst Hilfe ${i} öffnen`;
+      html += `<div class="hint${isOpen ? ' open' : ''}${unlocked ? '' : ' locked'}">
+        <button id="b-${k}" data-k="${k}" aria-expanded="${isOpen}" ${unlocked ? '' : 'aria-disabled="true"'}>
+          <span class="badge">${unlocked ? i + 1 : '🔒︎'}</span><span>${label}</span>${unlocked ? '<span class="chev" aria-hidden="true">▾</span>' : ''}
+        </button>${isOpen ? `<div class="body">${body.replace(/__(\w+)/g, (_, n) => IMG[n] || '')}</div>` : ''}</div>`;
+    });
+    html += '</section>';
+  }
+  const used = Object.keys(open).length;
+  html += `<div class="foot"><span>Geöffnete Hilfen auf diesem Gerät: <strong>${used}</strong></span>` +
+    (asking ? `<span class="confirm">Wirklich alles zurücksetzen? <button id="yes">Ja, zurücksetzen</button><button id="no">Abbrechen</button></span>`
+            : `<button id="reset">Für die nächste Person zurücksetzen</button>`) + '</div>';
+  app.innerHTML = html;
+}
+document.addEventListener('click', e => {
+  const b = e.target.closest('button'); if (!b) return;
+  if (b.id === 'reset') { asking = true; render(); return; }
+  if (b.id === 'no') { asking = false; render(); return; }
+  if (b.id === 'yes') { open = {}; shown = {}; asking = false; save(); render(); return; }
+  const k = b.dataset.k; if (!k || b.getAttribute('aria-disabled')) return;
+  shown[k] = !shown[k]; if (shown[k]) { open[k] = true; save(); }
+  render(); document.getElementById('b-' + k)?.focus();
+});
+render();
+</script>
+
+</body>
+</html>
